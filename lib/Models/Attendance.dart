@@ -1,28 +1,18 @@
-class Attendance{
-    String? id;
-    String? name;
-    bool checked;
+import 'package:mobx/mobx.dart';
+part 'attendance.g.dart';
 
-    Attendance({required this.id, required this.name, this.checked = false});
+class Attendance = _Attendance with _$Attendance;
 
-    static List<Attendance> attendanceList(){
-      return [
-        Attendance(id: '0', name: 'João', checked: false),
-        Attendance(id: '0', name: 'João', checked: true),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-        Attendance(id: '0', name: 'João'),
-      ];
-    }
+abstract class _Attendance with Store {
+  _Attendance(this.id, this.name, this.checked);
 
+  String? id;
+  @observable
+  String? name;
+  @observable
+  bool checked = false;
 }
+
+
+
+

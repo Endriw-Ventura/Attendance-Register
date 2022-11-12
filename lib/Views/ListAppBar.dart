@@ -1,88 +1,55 @@
-import 'package:attendance_register/Components/AttendanceItem.dart';
+import 'package:attendance_register/Components/attendanceItem.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:provider/provider.dart';
+import '../Components/bottomButton.dart';
+import '../Models/attendance.dart';
+import '../Models/attendance_list.dart';
 
-import '../Components/BottomButton.dart';
-import '../Models/Attendance.dart';
-
-class ListAppBar extends StatefulWidget {
-  @override
-  State<ListAppBar> createState() => _ListAppBarState();
-}
-
-class _ListAppBarState extends State<ListAppBar> {
-  final attendanceList = Attendance.attendanceList();
-
+class ListAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white70,
-      appBar: AppBar(
-        //elevation: 0,
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Icon(Icons.menu,
-              size: 30,
-              color: Colors.black,
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 60),
-            ),
-            Text('Lista de presença',
-              style: TextStyle(color: Colors.black),
 
-            )
-          ],
+    final attendanceList = Provider.of<AttendanceList>(context);
+
+    return Observer(
+      builder: (_) => Scaffold(
+        backgroundColor: Colors.white70,
+        appBar: AppBar(
+          //elevation: 0,
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Icon(Icons.menu,
+                size: 30,
+                color: Colors.black,
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 60),
+              ),
+              Text('Lista de presença',
+                style: TextStyle(color: Colors.black),
+
+              )
+            ],
+          ),
         ),
+        body: Container(
+            height: 570,
+            child: ListView(
+                children: [
+                  for(Attendance attendance in attendanceList.attendances)
+                    AttendanceItem(
+                      attendance: attendance,
+                      onCheckChange: attendanceList.onCheckChange,
+                      onDeleteItem: attendanceList.onDeleteItem,
+                      onEditItem: attendanceList.onEditItem,
+                    )
+                ]
+            )
+        ),
+        floatingActionButton: BottomButton(addAttendanceItem: attendanceList.addAttendanceItem),
       ),
-      body: Container(
-          height: 570,
-          child: ListView(
-              children: [
-                for(Attendance attendance in attendanceList)
-                  AttendanceItem(
-                    attendance: attendance,
-                    onCheckChange: _onCheckChange,
-                    onDeleteItem: _onDeleteItem,
-                    onEditItem: _onEditItem,
-                  )
-              ]
-          )
-      ),
-      floatingActionButton: BottomButton(addAttendanceItem: _addAttendanceItem),
     );
-  }
-
-  void _onCheckChange(Attendance attendance) {
-    setState(() {
-      attendance.checked = !attendance.checked;
-    });
-  }
-
-  void _onDeleteItem(Attendance attendance) {
-    //could be id too with removeAt()
-    setState(() {
-      attendanceList.remove(attendance);
-    });
-  }
-
-  void _onEditItem(Attendance attendance, String name){
-    setState(() {
-        attendance.name = name;
-    });
-  }
-
-   void _addAttendanceItem(String name) {
-    setState(() {
-      attendanceList.add(
-          Attendance(
-              id: DateTime
-                  .now()
-                  .millisecond
-                  .toString(),
-              name: name
-          )
-      );
-    });
   }
 }
